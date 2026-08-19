@@ -80,7 +80,7 @@ Or I just run `systemctl start --user immich-albums`.
 
 This sequence of regular expressions will use my folder names to create the following Immich albums:
 
-| Immich album name | Original filesystem folder structure |
+| Immich album (created by command) | Original filesystem folder structure |
 --------------------|--------------------------------------|
 | 🥳 A day in Salem (2021-08-20) | 📂Party and People/2021-08-20 A day in Salem
 | 🥳 Max and his skate (2021-09-02／10-14) | 📂Party and People/2021-09-02／10-14 Max and his skate
@@ -94,6 +94,8 @@ This sequence of regular expressions will use my folder names to create the foll
 | ✈️ Weekend in New York City (2021-07-23／25)  | 📂Trips International/2021-07-23／25 Weekend in New York City
 | ✈️ Slovenia, Veneza, Zurich (2025-01)  | 📂Trips International/2025-01 Slovenia, Veneza, Zurich
 | ✈️ 🇺🇿Uzbekistan, 🇰🇬Kyrgyzstan, 🇨🇳Kashgar, 🇷🇺Moscow, 🇫🇷Paris (2007-09-14／10-09) | 📂Trips International/2007-09-14／10-09 🇺🇿Uzbekistan, 🇰🇬Kyrgyzstan, 🇨🇳Kashgar, 🇷🇺Moscow, 🇫🇷Paris
+
+You can play with other regular expresisons for your folder naming convetions.
 
 Also, favorite semantics is taken from file names. Here is how I name my photo files:
 ```
@@ -120,8 +122,9 @@ HEIC.
 
 So the best solution that I found is to run **[ReadyMedia (formerly known
 as MiniDLNA)](https://sourceforge.net/projects/minidlna/)** daemon in my home
-server, serving a folder of photo files, then I use the **Media App** which is
-already included in webOS, to access and play my photos as a giant photoframe.
+server, serving a folder of photo files, then I use the **Media Player App**
+which is already included in webOS and is a pretty decent DLNA player, to
+access and play my photos as a giant photoframe.
 
 The result is so smooth, simple and stuning that sometimes I need to turn off
 the TV off because we can't stop watching.
