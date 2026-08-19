@@ -153,7 +153,11 @@ reordered every day in a random sequence.
 ```python
 import immich
 
-im=immich.Immich('https://photos.mycloud.net/api','aaa...zzz')
+im=immich.Immich(
+    url='https://photos.mycloud.net/api',
+    apiKey='aaa...zzz',
+    validCertOnly=True
+)
 
 # Do easier operations as documented in Immich REST API (https://api.immich.app/introduction)
 im.get('/libraries')
