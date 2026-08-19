@@ -1,5 +1,7 @@
 # Immich simple API for Python and tools to work with external libraries
 
+`pip install immich_exlib_tools --user`
+
 So you have spent the last years carefully organizing your photos in a nice
 folder structure, like me:
 
