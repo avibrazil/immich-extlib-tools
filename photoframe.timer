@@ -1,0 +1,14 @@
+# Systemd timer file for photoframe service.
+#
+# Put into $HOME/.config/systemd/user/ to run the photoframe.service on a
+# scheduled basis. Don't forget to `systemctl --user daemon-reload`
+
+[Unit]
+Description=Scheduler for photoframe
+
+[Timer]
+OnCalendar=5:02
+
+[Install]
+WantedBy=timers.target
+

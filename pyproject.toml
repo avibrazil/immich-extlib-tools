@@ -1,0 +1,48 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "immich-exlib-tools"
+version = '0.6'
+description = "Tools and API to bring your external photo library even closer to Immich"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.8"
+authors = [
+    { name = "Avi Alkalay", email = "avi@unix.sh" },
+]
+
+keywords = [
+    "photo management", "immich"
+]
+
+classifiers=[
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)",
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Web Environment",
+]
+
+# dependencies = [
+#     "pandas>=2",
+#     "pyaml",
+# ]
+
+# dynamic = [
+#     "version",
+# ]
+
+# [tool.setuptools.package-dir]
+# immich-exlib-tools = "src"
+
+[project.scripts]
+immich_albums_from_folders = "immich.immich_albums_from_folders:main"
+immich_dlna_photoframe = "immich.immich_dlna_photoframe:main"
+
+[project.urls]
+Homepage = "https://github.com/avibrazil/investorzilla"
+Source = "https://github.com/avibrazil/investorzilla"
+Issues = "https://github.com/avibrazil/investorzilla/issues/new/choose"
+Pypi = "https://pypi.org/project/investorzilla"

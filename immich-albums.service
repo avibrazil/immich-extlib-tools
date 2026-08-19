@@ -1,0 +1,28 @@
+# Service file for systemd.
+#
+# Put your Immich URL, API key and target folder and then put the file
+# into $HOME/.config/systemd/user/ and do a `systemctl --user daemon-reload`
+#
+# Run it as your regular user (not root) like:
+#    systemctl --user start immich-albums
+#
+
+[Unit]
+Description=Convert filesystem folders of your photo library into Immich albums, mark assets as favorites an other operations
+
+[Service]
+Type=oneshot
+
+Environment=IMMICH_API_KEY=mT...6s
+
+ExecStart=%h/.local/bin/immich_albums_from_folders \
+    --immich-url       'https://photos.mycloud.net:444/api' \
+    --favorite-pattern '★|♥︎' \
+    --from-to          '(?P<dummy>.*)/(?P<year>\d{4})-99[\s\-](?P<name>Camera Roll)' 'Generic/\g<name> (\g<year>)' \
+    --from-to          '/(?P<year>\d{4})-99[\s\-](?P<name>.*)'                       '/\g<name> (\g<year>)' \
+    --from-to          '/(?P<date>[\d\-\s／]*)[\s\-](?P<name>.*)'                    '/\g<name> (\g<date>)' \
+    --from-to          'Viagens Nacionais/'                                          '🚗 ' \
+    --from-to          'Viagens Internacionais/'                                     '✈️ ' \
+    --from-to          'Festas e Pessoas/'                                           '🥳 ' \
+    --from-to          'Generic/'                                                    '📸 ' \
+    --from-to          '_'                                                           ' '

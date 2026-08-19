@@ -1,0 +1,24 @@
+# Service file for systemd.
+#
+# Put your Immich URL, API key and target folder and then put the file
+# into $HOME/.config/systemd/user/ and do a `systemctl --user daemon-reload`
+#
+# Run it as your regular user (not root) like:
+#    systemctl --user start photoframe
+#
+# Or make it run automatically with the photoframe.timer file
+#
+
+[Unit]
+Description=Prepare assets from Immich album for a photoframe folder served by minidlna
+
+[Service]
+Type=oneshot
+
+Environment=IMMICH_API_KEY=mT...6s
+
+ExecStart=%h/.local/bin/immich_dlna_photoframe \
+    --immich-url       'https://photos.mycloud.net:444/api' \
+    --album            '★♥︎Top' \
+    --target           '/media/Media/Photos/Photoframe' \
+    --randomize
