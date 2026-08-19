@@ -45,7 +45,10 @@ You need to `pip install pandas --user` to use these tools. And also
 
 Since I run this commands a lot, and they get a lot of long and complicated
 parameters, I encapsulated it all in systemd service files in my Linux user
-account (not root), installed in `$HOME/.config/systemd/user/`,
+account (not root), installed in `$HOME/.config/systemd/user/`.
+[See](https://github.com/avibrazil/immich-extlib-tools/blob/main/immich-albums.service)
+[them](https://github.com/avibrazil/immich-extlib-tools/blob/main/photoframe.service)
+[here](https://github.com/avibrazil/immich-extlib-tools/blob/main/photoframe.timer).
 
 ### immich_albums_from_folders
 
