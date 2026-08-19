@@ -147,3 +147,36 @@ Or I just run `systemctl start --user photoframe`.
 It takes about 5 minutes to convert the HEICs in my +1000 selection in `★♥︎Top`
 Immich album. And I run it every day at midnight, so I get the selection
 reordered every day in a random sequence.
+
+## The Python API
+
+```python
+import immich
+
+im=immich.Immich('https://photos.mycloud.net/api','aaa...zzz')
+
+# Do easier operations as documented in Immich REST API (https://api.immich.app/introduction)
+im.get('/libraries')
+im.put('/albums/assets', dict_with_parameters)
+im.delete('/assets', dict(ids=[asset_id1,asset_id2,asset_id3]))
+newAlbumId = im.post(
+    "/albums",
+    dict(
+        # Create album with this name
+        albumName = "★♥︎Top",
+        assetIds  = list(...),
+        description = "Some descriptive description"
+    )
+)['id']
+
+# Additional 2 convenient methods
+json_response_converted_to_dict = im.assets(dict(albumIds=[id1,id2], order='asc'))
+all_albums = im.albums()
+
+# Use with Pandas
+import pandas
+
+assets = pandas.DataFrame(im.assets(dict(albumIds=[id1,id2], order='asc')))
+albums = pandas.DataFrame(im.albums())
+)
+```
