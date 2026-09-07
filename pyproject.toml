@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "immich-exlib-tools"
-version = '0.6'
+version = '0.7'
 description = "Tools and API to bring your external photo library even closer to Immich"
 readme = "README.md"
 license = { file = "LICENSE" }

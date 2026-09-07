@@ -46,16 +46,12 @@ You need to `pip install pandas --user` to use these tools. And also
 Since I run this commands a lot, and they get a lot of long and complicated
 parameters, I encapsulated it all in systemd service files in my Linux user
 account (not root), installed in `$HOME/.config/systemd/user/`.
-[See](https://github.com/avibrazil/immich-extlib-tools/blob/main/immich-albums.service)
-[them](https://github.com/avibrazil/immich-extlib-tools/blob/main/photoframe.service)
-[here](https://github.com/avibrazil/immich-extlib-tools/blob/main/photoframe.timer).
+[See](https://github.com/avibrazil/immich-extlib-tools/blob/main/immich-albums.service)[them](https://github.com/avibrazil/immich-extlib-tools/blob/main/photoframe.service)[here](https://github.com/avibrazil/immich-extlib-tools/blob/main/photoframe.timer).
 
 ### immich_albums_from_folders
 
-- Synchronizes filesystem folders structure with Immich albums, converting
-  folder names into something nicer for Immich.
-- Mark photos as favorites in Immich if their file names have some special
-  chars (I use ★ or ♥︎).
+- Synchronizes filesystem folders structure with Immich albums, converting folder names into something nicer for Immich.
+- Mark photos as favorites in Immich if their file names have some special chars (I use ★ or ♥︎).
 
 So everytime I add or remove folders and photos to my collection in the
 filesystems, I make Immich rescan it and then I run `immich_albums_from_folders`
@@ -80,24 +76,25 @@ Or I just run `systemctl start --user immich-albums`.
 
 This sequence of regular expressions will use my folder names to create the following Immich albums:
 
-| Immich album (created by command) | Original filesystem folder structure |
---------------------|--------------------------------------|
-| 🥳 A day in Salem (2021-08-20) | 📂Party and People/2021-08-20 A day in Salem
-| 🥳 Max and his skate (2021-09-02／10-14) | 📂Party and People/2021-09-02／10-14 Max and his skate
-| 📸 Camera Roll (2023) | 📂Party and People/2023-99 Camera Roll
-| 📸 Camera Roll (2024)| 📂Party and People/2024-99 Camera Roll
-| 🥳 Carnaval 2025 (2025-02-23／03-04) | 📂Party and People/2025-02-23／03-04 Carnaval 2025
-| 📸 Guarujá (2021)   | 📂Trips National/2021-99 Guarujá
-| 🚗 Carnaval in Rio, Paraty, São Paulo with Mary ＆ John (2023-02-21／28)  | 📂Trips National/2023-02-21／28 Carnaval in Rio, Paraty, São Paulo with Mary ＆ John
-| 🚗 PETAR — Parque Estadual Turístico do Alto Ribeira (2023-10-12／15)   | 📂Trips National/2023-10-12／15 PETAR — Parque Estadual Turístico do Alto Ribeira
-| ✈️ Germany, Ludwigsburg, Munich, Salzburg (2004-08) | 📂Trips International/2004-08 Germany, Ludwigsburg, Munich, Salzburg
-| ✈️ Weekend in New York City (2021-07-23／25)  | 📂Trips International/2021-07-23／25 Weekend in New York City
-| ✈️ Slovenia, Veneza, Zurich (2025-01)  | 📂Trips International/2025-01 Slovenia, Veneza, Zurich
-| ✈️ 🇺🇿Uzbekistan, 🇰🇬Kyrgyzstan, 🇨🇳Kashgar, 🇷🇺Moscow, 🇫🇷Paris (2007-09-14／10-09) | 📂Trips International/2007-09-14／10-09 🇺🇿Uzbekistan, 🇰🇬Kyrgyzstan, 🇨🇳Kashgar, 🇷🇺Moscow, 🇫🇷Paris
+| Immich album (created by command)                                                        | Original filesystem folder structure                                                                      |
+|------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| 🥳 A day in Salem (2021-08-20)                                                           | 📂Party and People/2021-08-20 A day in Salem                                                              |
+| 🥳 Max and his skate (2021-09-02／10-14)                                                  | 📂Party and People/2021-09-02／10-14 Max and his skate                                                     |
+| 📸 Camera Roll (2023)                                                                    | 📂Party and People/2023-99 Camera Roll                                                                    |
+| 📸 Camera Roll (2024)                                                                    | 📂Party and People/2024-99 Camera Roll                                                                    |
+| 🥳 Carnaval 2025 (2025-02-23／03-04)                                                      | 📂Party and People/2025-02-23／03-04 Carnaval 2025                                                         |
+| 📸 Guarujá (2021)                                                                        | 📂Trips National/2021-99 Guarujá                                                                          |
+| 🚗 Carnaval in Rio, Paraty, São Paulo with Mary ＆ John (2023-02-21／28)                   | 📂Trips National/2023-02-21／28 Carnaval in Rio, Paraty, São Paulo with Mary ＆ John                        |
+| 🚗 PETAR — Parque Estadual Turístico do Alto Ribeira (2023-10-12／15)                     | 📂Trips National/2023-10-12／15 PETAR — Parque Estadual Turístico do Alto Ribeira                          |
+| ✈️ Germany, Ludwigsburg, Munich, Salzburg (2004-08)                                      | 📂Trips International/2004-08 Germany, Ludwigsburg, Munich, Salzburg                                      |
+| ✈️ Weekend in New York City (2021-07-23／25)                                              | 📂Trips International/2021-07-23／25 Weekend in New York City                                              |
+| ✈️ Slovenia, Veneza, Zurich (2025-01)                                                    | 📂Trips International/2025-01 Slovenia, Veneza, Zurich                                                    |
+| ✈️ 🇺🇿Uzbekistan, 🇰🇬Kyrgyzstan, 🇨🇳Kashgar, 🇷🇺Moscow, 🇫🇷Paris (2007-09-14／10-09) | 📂Trips International/2007-09-14／10-09 🇺🇿Uzbekistan, 🇰🇬Kyrgyzstan, 🇨🇳Kashgar, 🇷🇺Moscow, 🇫🇷Paris |
 
 You can play with other regular expresisons for your folder naming convetions.
 
 Also, favorite semantics is taken from file names. Here is how I name my photo files:
+
 ```
 2021.07.24-17.43.15 • Manhattan skyline from sailboat cruise 【Avi Alkalay·︎iPhone 12 Pro】.heic
 2007.09.14-15.16.15 ♥ Sena River 【Avi Alkalay·Sony DSC-W30】.jpg
@@ -113,6 +110,40 @@ names that don't say nothing as IMG5678.JPG. Most of the sematics of your photo
 collection must reside in the simplest tool, which is the filesystem. Immich
 just adds usability and remote access to your archives.
 
+#### Share albums to other Immich users
+
+`immich_albums_from_folders` can also share the created albums to other Immich
+users in a group fashion. Set a YAML text in the `IMMICH_GROUPS_ALBUMS`
+environment variable like this:
+
+```shell
+export IMMICH_GROUPS_ALBUMS=`
+groups:                             \
+  Family:                           \
+  - user1@email.com                 \
+  - user2@email.com                 \
+  Group 2:                          \
+  - user2@email.com                 \
+  - otheruser@mydomain.com          \
+                                    \
+groups albums:                      \
+  Family:                           \
+    albums: __all                   \
+    exceptions:                     \
+    - Trip with old girlfriend      \
+    - Ancient party as teenager     \
+  Group 2:                          \
+    albums:                         \
+    - Business trip 1               \
+    - Party one                     \
+'
+```
+
+Optionally, instead of setting this environment variable, you can pass this YAML
+(or JSON) as a parameter to `immich_albums_from_folders`. Example:
+
+`immich_albums_from_folders --groups-albums '{"groups": {"Family": [user1,user2...'`
+
 ### immich_dlna_photoframe
 
 I tried many apps to display photos in my living room LG webOS TV, but they all
@@ -120,8 +151,8 @@ failed. Either there is no native Immich app ready to install, web apps are bad,
 or the TV doesn't support more advanced formats (that I use a lot), such as
 HEIC.
 
-So the best solution that I found is to run **[ReadyMedia (formerly known
-as MiniDLNA)](https://sourceforge.net/projects/minidlna/)** daemon in my home
+So the best solution that I found is to run [**ReadyMedia (formerly known
+as MiniDLNA)**](https://sourceforge.net/projects/minidlna/) daemon in my home
 server, serving a folder of photo files, then I use the **Media Player App**
 which is already included in webOS and is a pretty decent DLNA player, to
 access and play my photos as a giant photoframe.
@@ -136,8 +167,7 @@ So the `immich_dlna_photoframe` command will retrieve this album and:
 
 - Convert HEIC to JPEG in the target folder (the folder served by DLNA)
 - Link JPEG original files to the target folder
-- Add a prefix to all file names so they get randomized, because LG's Media App
-  plays them as they are listed and DLNA serves them arphabetically ordered, which is boring
+- Add a prefix to all file names so they get randomized, because LG's Media App plays them as they are listed and DLNA serves them arphabetically ordered, which is boring
 
 So I run it like this:
 

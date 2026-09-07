@@ -4,6 +4,7 @@ import logging
 import argparse
 import concurrent.futures
 
+import yaml
 import pandas
 import immich
 
@@ -50,15 +51,6 @@ def prepare_args():
         help='Regex pattern of chars found only on favorited file names, as “★|♥︎”'
     )
 
-    # parser.add_argument(
-    #     '-a', '--no-folder-albums',
-    #     dest='no_folder_albums',
-    #     nargs='*',
-    #     action='append',
-    #     default=[],
-    #     help='Album names that shouldn’t be matched to folders, so will not be touched. Pass many albums.'
-    # )
-
     parser.add_argument(
         '--from-to',
         nargs=2,
@@ -75,6 +67,23 @@ def prepare_args():
         action=argparse.BooleanOptionalAction,
         default=False,
         help='Force simulation only'
+    )
+
+    parser.add_argument(
+        '-g', '--groups-albums',
+        dest='groups_albums',
+        required=False,
+        default=os.getenv('IMMICH_GROUPS_ALBUMS'),
+        help='YAML (or JSON) text with ‘groups’ and ‘groups albums’ so albums will be shared to users on each group. If not passed, the text will be read from environment var IMMICH_GROUPS_ALBUMS'
+    )
+
+    parser.add_argument(
+        '-l', '--album-limit',
+        dest='album_limit',
+        required=False,
+        type=int,
+        default=0,
+        help='Limit operation to only this number of albums. Useful for quicker simulations and testing.'
     )
 
     parser.add_argument(
@@ -115,7 +124,15 @@ def main():
     )
 
     # Initialization: Get data to work with
-    albums = get_albums(im)
+    if args.groups_albums:
+        args.groups_albums=yaml.safe_load(args.groups_albums)
+
+    albums = get_albums(im).pipe(
+        lambda table:
+            table.head(args.album_limit)
+            if args.album_limit>0
+            else table
+    )
     imports_paths = get_library_import_paths(im)
 
     # Get list of assets per album and analyze and transform data to make it
@@ -127,17 +144,125 @@ def main():
         args.from_to
     )
 
-    # Set favorites, create albums, add and remove assets from albums
+    # Set favorites
     favorites_reset(im, album_assets)
+
+    # Remove assets from albums
     album_remove_assets(im, album_assets)
+
+    # Add assets to albums and create them if necessary
     album_add_assets(im, album_assets)
 
-    # Albums were heavily modified; retrieve them again
-    albums = get_albums(im)
+    # List of albums were heavily modified; retrieve them again
+    albums = get_albums(im).pipe(
+        lambda table:
+            table.head(args.album_limit)
+            if args.album_limit>0
+            else table
+    )
 
     # Delete empty albums
     album_del_empty(im, albums)
 
+    # Get list of albums again
+    albums = get_albums(im).pipe(
+        lambda table:
+            table.head(args.album_limit)
+            if args.album_limit>0
+            else table
+    )
+
+    (groups,groups_albums) = get_groups_albums(args.groups_albums, albums, im)
+
+    share_albums(groups_albums, im)
+
+
+
+def get_groups_albums(groups_albums, albums, im):
+    if groups_albums is None:
+        return (None,None)
+
+    groups_df = (
+        pandas.DataFrame.from_dict(groups_albums['groups'],orient='index')
+        .stack()
+        .reset_index()
+        .drop(columns='level_1')
+        .rename(columns={'level_0':'group',0:'user'})
+        .dropna(subset='user')
+    )
+
+    logging.debug(groups_df)
+
+    groups_albums_df = (
+        pandas.DataFrame.from_dict(groups_albums['groups albums'],orient='index')
+        .assign(
+            albums = lambda table: table.apply(
+                axis=1,
+                func=lambda row:
+                    set(
+                        albums.albumName.to_list()
+                        if 'albums' in row and isinstance(row.albums, str) and row.albums=='__all'
+                        else row.albums
+                    ) -
+                    set(
+                        row.exceptions
+                        if 'exceptions' in row and not isinstance(row.exceptions, list) and pandas.notna(row.exceptions)
+                        else ''
+                    )
+            )
+        )
+        .drop(columns='exceptions')
+        .explode('albums')
+        .dropna()
+
+        .merge(groups_df,left_index=True,right_on='group')
+        .sort_values('albums')
+        .drop_duplicates()
+        .merge(
+            pandas.DataFrame(im.get('/users'))['email id'.split()],
+            left_on='user',
+            right_on='email'
+        )
+        # .drop(columns='user')
+        .rename(columns=dict(id='userid'))
+        .merge(
+            albums['albumName albumId'.split()],
+            left_on='albums',
+            right_on='albumName'
+        )
+        .groupby(['albumId','albumName'])
+        .agg(user_list=('userid',list), user_email=('email',list))
+        .reset_index()
+    )
+
+    return (groups_df, groups_albums_df)
+
+
+
+def share_albums(groups_albums, im):
+    def share(albumId, albumName, user_list, user_email):
+        logging.debug(f'Share album «{albumName}» to {user_email}')
+        if not args.simulate:
+            im.put(
+                f'/albums/{albumId}/users',
+                dict(
+                    albumUsers=[
+                        dict(
+                            role='viewer',
+                            userId=uid
+                        )
+                        for uid in user_list
+                    ]
+                )
+            )
+
+    if groups_albums is not None:
+        groups_albums.pipe(
+            lambda table: table.apply(
+                axis=1,
+                func=lambda row: share(row.albumId,row.albumName,row.user_list,row.user_email)
+            )
+        )
 
 
 def get_albums(im):
