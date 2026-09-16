@@ -220,5 +220,15 @@ import pandas
 
 assets = pandas.DataFrame(im.assets(dict(albumIds=[id1,id2], order='asc')))
 albums = pandas.DataFrame(im.albums())
+
+# Then, execute Immich operations with Pandas.
+# For example, delete all albums that contain 'USA' in album name
+(
+    albums
+    .query("albumName.str.contains('USA', na=False)")
+    .apply(
+        axis=1,
+        func=lambda row: im.delete(f'/albums/{row.id}')
+    )
 )
 ```
