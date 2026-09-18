@@ -14,6 +14,35 @@ Description=Convert filesystem folders of your photo library into Immich albums,
 Type=oneshot
 
 Environment=IMMICH_API_KEY=mT...6s
+Environment=IMMICH_GROUPS_ALBUMS='\
+    {                                      \
+      "groups": {                          \
+        "Family": [                        \
+          "user1@email.com",               \
+          "user2@email.com"                \
+        ],                                 \
+        "Group 2": [                       \
+          "user2@email.com",               \
+          "otheruser@mydomain.com"         \
+        ]                                  \
+      },                                   \
+      "groups albums": {                   \
+        "Family": {                        \
+          "albums": "__all",               \
+          "exceptions": [                  \
+            "Trip with old girlfriend",    \
+            "Ancient party as teenager"    \
+          ]                                \
+        },                                 \
+        "Group 2": {                       \
+          "albums": [                      \
+            "Business trip 1",             \
+            "Party one"                    \
+          ]                                \
+        }                                  \
+      }                                    \
+    }                                      \
+'
 
 ExecStart=%h/.local/bin/immich_albums_from_folders \
     --immich-url       'https://photos.mycloud.net:444/api' \
